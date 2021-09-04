@@ -27,6 +27,8 @@ public class BaseSchema implements Schema, CsvAwareSchema, Serializable {
   private Format format;
   private Map<String, String> namespaces;
 
+  // Knowledgebases
+
   public BaseSchema() {
     // initialize without parameters
   }
