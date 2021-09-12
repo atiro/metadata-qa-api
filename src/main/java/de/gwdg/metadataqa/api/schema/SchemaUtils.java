@@ -7,6 +7,8 @@ import de.gwdg.metadataqa.api.rule.logical.NotChecker;
 import de.gwdg.metadataqa.api.rule.logical.OrChecker;
 import de.gwdg.metadataqa.api.rule.pairchecker.DisjointChecker;
 import de.gwdg.metadataqa.api.rule.pairchecker.LessThanPairChecker;
+import de.gwdg.metadataqa.api.rule.pairchecker.EntityAbsenceChecker;
+import de.gwdg.metadataqa.api.rule.pairchecker.FactChecker;
 import de.gwdg.metadataqa.api.rule.singlefieldchecker.ContentTypeChecker;
 import de.gwdg.metadataqa.api.rule.singlefieldchecker.EnumerationChecker;
 import de.gwdg.metadataqa.api.rule.pairchecker.EqualityChecker;
@@ -16,6 +18,7 @@ import de.gwdg.metadataqa.api.rule.singlefieldchecker.MaxLengthChecker;
 import de.gwdg.metadataqa.api.rule.singlefieldchecker.MinCountChecker;
 import de.gwdg.metadataqa.api.rule.singlefieldchecker.MinLengthChecker;
 import de.gwdg.metadataqa.api.rule.singlefieldchecker.NumericValueChecker;
+import de.gwdg.metadataqa.api.rule.singlefieldchecker.DateValueChecker;
 import de.gwdg.metadataqa.api.rule.singlefieldchecker.PatternChecker;
 import de.gwdg.metadataqa.api.rule.RuleChecker;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +31,10 @@ import static de.gwdg.metadataqa.api.rule.singlefieldchecker.NumericValueChecker
 import static de.gwdg.metadataqa.api.rule.singlefieldchecker.NumericValueChecker.TYPE.MAX_INCLUSIVE;
 import static de.gwdg.metadataqa.api.rule.singlefieldchecker.NumericValueChecker.TYPE.MIN_EXCLUSIVE;
 import static de.gwdg.metadataqa.api.rule.singlefieldchecker.NumericValueChecker.TYPE.MIN_INCLUSIVE;
+
+import static de.gwdg.metadataqa.api.rule.singlefieldchecker.DateValueChecker.TYPE.DATE_EARLIEST;
+import static de.gwdg.metadataqa.api.rule.singlefieldchecker.DateValueChecker.TYPE.DATE_LATEST;
+import static de.gwdg.metadataqa.api.rule.singlefieldchecker.DateValueChecker.TYPE.DATE_EQUAL;
 
 public class SchemaUtils {
 
@@ -91,13 +98,25 @@ public class SchemaUtils {
       ruleCheckers.add(new NumericValueChecker(branch, rule.getMinInclusive(), MIN_INCLUSIVE));
 
     if (rule.getMaxInclusive() != null)
-      ruleCheckers.add(new NumericValueChecker(branch, rule.getMinInclusive(), MAX_INCLUSIVE));
+      ruleCheckers.add(new NumericValueChecker(branch, rule.getMaxInclusive(), MAX_INCLUSIVE));
 
     if (rule.getMinExclusive() != null)
       ruleCheckers.add(new NumericValueChecker(branch, rule.getMinInclusive(), MIN_EXCLUSIVE));
 
     if (rule.getMaxExclusive() != null)
-      ruleCheckers.add(new NumericValueChecker(branch, rule.getMinInclusive(), MAX_EXCLUSIVE));
+      ruleCheckers.add(new NumericValueChecker(branch, rule.getMaxInclusive(), MAX_EXCLUSIVE));
+
+    if (rule.getDateEarliest() != null)
+      ruleCheckers.add(new DateValueChecker(branch, rule.getDateEarliest(), DATE_EARLIEST));
+
+    if (rule.getDateLatest() != null)
+      ruleCheckers.add(new DateValueChecker(branch, rule.getDateLatest(), DATE_LATEST));
+
+    if (rule.getDateEqual() != null)
+      ruleCheckers.add(new DateValueChecker(branch, rule.getDateEqual(), DATE_EQUAL));
+
+    if (rule.getContentType() != null && !rule.getContentType().isEmpty())
+      ruleCheckers.add(new ContentTypeChecker(branch, rule.getContentType()));
 
     if (rule.getContentType() != null && !rule.getContentType().isEmpty())
       ruleCheckers.add(new ContentTypeChecker(branch, rule.getContentType()));
@@ -107,6 +126,14 @@ public class SchemaUtils {
 
     if (rule.getLessThanOrEquals() != null)
       pair(schema, ruleCheckers, branch, rule.getLessThan(), "lessThanOrEquals");
+
+    if (rule.getEntityAbsenceCheck() != null) {
+      pair(schema, ruleCheckers, branch, rule.getEntityAbsenceCheck(), "EntityAbsenceChecker");
+	}
+
+    if (rule.getFactCheck() != null) {
+      pair(schema, ruleCheckers, branch, rule.getFactCheck(), "FactChecker");
+	}
 
     if (rule.getAnd() != null) {
       List<RuleChecker> childRuleCheckers = getChildRuleCheckers(schema, branch, rule.getAnd());
@@ -160,7 +187,11 @@ public class SchemaUtils {
         ruleChecker = new LessThanPairChecker(branch, field2, LessThanPairChecker.TYPE.LESS_THAN);
       } else if ("lessThanOrEquals".equals(type)) {
         ruleChecker = new LessThanPairChecker(branch, field2, LessThanPairChecker.TYPE.LESS_THAN_OR_EQUALS);
-      }
+      } else if ("EntityAbsenceChecker".equals(type)) {
+        ruleChecker = new EntityAbsenceChecker(branch, field2);
+      } else if ("FactChecker".equals(type)) {
+        ruleChecker = new FactChecker(branch, field2);
+	  }
 
       if (ruleChecker != null)
         ruleCheckers.add(ruleChecker);

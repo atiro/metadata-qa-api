@@ -24,6 +24,9 @@ public class Rule implements Serializable {
   private Double minInclusive;
   private Double maxExclusive;
   private Double maxInclusive;
+  private String dateEarliest;
+  private String dateLatest;
+  private String dateEqual;
   private Integer minLength;
   private Integer maxLength;
   private String lessThan;
@@ -31,6 +34,9 @@ public class Rule implements Serializable {
   private String hasValue;
   private Boolean unique;
   private List<String> contentType;
+  private String kBase; // Knowledge Base
+  private String entityAbsenceCheck;
+  private String factCheck;
 
   public String getId() {
     return id;
@@ -237,6 +243,45 @@ public class Rule implements Serializable {
     return this;
   }
 
+  public String getDateEarliest() {
+    return dateEarliest;
+  }
+
+  public void setDateEarliest(String dateEarliest) {
+    this.dateEarliest = dateEarliest;
+  }
+
+  public Rule withDateEarliest(String dateEarliest) {
+    setDateEarliest(dateEarliest);
+    return this;
+  }
+
+  public String getDateLatest() {
+    return dateLatest;
+  }
+
+  public void setDateLatest(String dateLatest) {
+    this.dateLatest = dateLatest;
+  }
+
+  public Rule withDateLatest(String dateLatest) {
+    setDateLatest(dateLatest);
+    return this;
+  }
+
+  public String getDateEqual() {
+    return dateEqual;
+  }
+
+  public void setDateEqual(String dateEqual) {
+    this.dateEqual = dateEqual;
+  }
+
+  public Rule withDateEqual(String dateEqual) {
+    setDateEqual(dateEqual);
+    return this;
+  }
+
   public Integer getMinLength() {
     return minLength;
   }
@@ -359,6 +404,45 @@ public class Rule implements Serializable {
 
   public Rule withContentType(List<String> contentType) {
     this.contentType = contentType;
+    return this;
+  }
+
+  public String getEntityAbsenceCheck() {
+    return entityAbsenceCheck;
+  }
+
+  public void setEntityAbsenceCheck(String entityAbsenceCheck) {
+    this.entityAbsenceCheck = entityAbsenceCheck;
+  }
+
+  public Rule withEntityAbsenceCheck(String entityAbsenceCheck) {
+    setEntityAbsenceCheck(entityAbsenceCheck);
+    return this;
+  }
+
+  public String getFactCheck() {
+    return factCheck;
+  }
+
+  public void setFactCheck(String factCheck) {
+    this.factCheck = factCheck;
+  }
+
+  public Rule withFactCheck(String factCheck) {
+    setFactCheck(factCheck);
+    return this;
+  }
+
+  public String getkBase() {
+    return kBase;
+  }
+
+  public void setkBase(String kBase) {
+    this.kBase = kBase;
+  }
+
+  public Rule withkBase(String kBase) {
+    setkBase(kBase);
     return this;
   }
 }
